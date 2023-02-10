@@ -109,6 +109,14 @@ func (ctx *httpHeaders) OnHttpRequestHeaders(numHeaders int, endOfStream bool) t
 		proxywasm.LogCriticalf("failed to get request headers: %v", err)
 	}
 
+	// Add the header passed by arguments
+	if ctx.headerName != "" {
+		proxywasm.LogInfof("Adding custom header:%s: %s", ctx.headerName, ctx.headerValue)
+		if err := proxywasm.ReplaceHttpRequestHeader(ctx.headerName, ctx.headerValue); err != nil {
+			proxywasm.LogCriticalf("failed to set request headers: %v", err)
+		}
+	}
+
 	for _, h := range hs {
 		proxywasm.LogInfof("request header --> %s: %s", h[0], h[1])
 	}
